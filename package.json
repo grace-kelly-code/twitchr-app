@@ -1,0 +1,45 @@
+{
+  "name": "twitchr-app",
+  "version": "0.0.1",
+  "description": "Twitchr App",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "axios": "^0.27.2",
+    "body-parser": "^1.19.0",
+    "cookie-parser": "^1.4.5",
+    "express": "^4.17.1",
+    "express-fileupload": "^1.2.1",
+    "express-handlebars": "^5.3.2",
+    "fs-extra": "^10.0.0",
+    "lodash": "^4.17.21",
+    "lowdb": "^1.0.0",
+    "mqtt": "^4.3.7",
+    "uuid": "^8.3.2",
+    "winston": "^3.3.3",
+    "twilio": "^3.83.3",
+    "mailgun-js": "^0.22.0",
+    "nodemailer": "^6.8.0",
+    "moment": "^2.29.4",
+    "moment-timezone": "^0.5.39",
+    "cors": "^2.8.5"
+  },
+  "repository": {
+    "url": "https://github.com/grace-kelly-code/twitchr-app/"
+  },
+  "license": "MIT",
+  "keywords": [
+    "node",
+    "glitch",
+    "express"
+  ],
+  "prettier": {
+    "singleQuote": false,
+    "printWidth": 120
+  },
+  "devDependencies": {
+    "prettier": "^2.3.0"
+  }
+}

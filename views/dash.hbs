@@ -1,0 +1,559 @@
+{{> menu id="dashboard" isAuthUser=true}}
+
+ <h2 class="text-center mb-5">
+  <i class="fa fa-chart-simple"></i>
+  Dashboard
+</h2>
+
+<!-- Status Panel -->
+<div class="row mb-2" id="statusPanel">
+  <div class="col-xl-3 col-md-6 mb-4">
+    <div class="card shadow h-100 py-2">
+      <div class="card-body">
+        <div class="row no-gutters align-items-center">
+          <div class="col mr-2">
+            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+              Status</div>
+            <div class="h5 mb-0 font-weight-bold" id="statusText">Loading...</div>
+          </div>
+          <div class="col-auto">
+            <i id="statusIcon"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-xl-3 col-md-6 mb-4">
+    <div class="card shadow h-100 py-2">
+      <div class="card-body">
+        <div class="row no-gutters align-items-center">
+          <div class="col mr-2">
+            <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
+              Temperature</div>
+            <div class="h5 mb-0 font-weight-bold" id="deviceTemp">Loading...</div>
+          </div>
+          <div class="col-auto">
+            <i class="fas fa-temperature-half fa-2x text-danger"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-xl-3 col-md-6 mb-4">
+    <div class="card shadow h-100 py-2">
+      <div class="card-body">
+        <div class="row no-gutters align-items-center">
+          <div class="col mr-2">
+            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+              Humidity</div>
+            <div class="h5 mb-0 font-weight-bold" id="deviceHumdity">Loading...</div>
+          </div>
+          <div class="col-auto">
+            <i class="fas fa-droplet fa-2x text-info"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-xl-3 col-md-6 mb-4">
+    <div class="card shadow h-100 py-2">
+      <div class="card-body">
+        <div class="row no-gutters align-items-center">
+          <div class="col mr-2">
+            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+              Pressure</div>
+            <div class="h5 mb-0 font-weight-bold" id="devicePressure">Loading...</div>
+          </div>
+          <div class="col-auto">
+            <i class="fas fa-water fa-2x text-success"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row text-center">
+    <p class="text-secondary">
+      Updated on: <strong><span id="stateTimestamp">Loading...</span></strong>
+    </p>
+  </div>
+
+</div>
+
+<!-- Latest Image -->
+<div class="row mt-2">
+  <div class="col-lg-12">
+    <div class="card shadow mb-4">
+      <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+        <h6 class="m-0 font-weight-bold text-primary">Latest Image</h6>
+
+      </div>
+      <div class="card-body latest-image">
+        <img
+          src="https://cdn.glitch.global/64342653-fbd5-4e94-9f9b-1cfbd9621e62/thumbnails%2Fplaceholder.jpg?1670400233050"
+          id="photo" alt="Last Captured Image" class="card-img-bottom" />
+      </div>
+      <div class="card-footer">
+        <p class="text-center mt-2" id="timestamp">Loading..</p>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- Admin Panel -->
+{{#if isAdmin}}
+<div class="row">
+  <div class="col-lg-12 mb-6 mt-3">
+    <div class="card shadow">
+      <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+        <h6 class="m-0 font-weight-bold text-primary">Admin Controls</h6>
+      </div>
+      <!-- Admin Buttons -->
+      <div class="card-body">
+        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center mt-3 mb-3">
+          <button class="btn btn-secondary btn-lg cmd-btn" onclick="getWeather()">
+            <i class="fa fa-sun"></i><br />Update
+          </button>
+          <button class="btn btn-success btn-lg cmd-btn px-4" onclick="makeSound('insect')">
+            <i class="fa fa-bug"></i><br />Sound
+          </button>
+          <button class="btn btn-success btn-lg cmd-btn" onclick="makeSound('birds')">
+            <i class="fa fa-crow"></i><br />Sound
+          </button>
+          <button class="btn btn-success btn-lg cmd-btn" onclick="makeSound('water')">
+            <i class="fa fa-water"></i><br />Sound
+          </button>
+          <button class="btn btn-warning btn-lg cmd-btn" onclick="makeSound('bark')">
+            <i class="fa fa-dog"></i><br />Sound
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{{/if}}
+
+<!-- Bird Species Breakdown Chart -->
+<div class="row mt-4">
+  <div class="col-lg-6 mt-3">
+    <div class="card shadow mb-4">
+      <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+        <h6 class="m-0 font-weight-bold text-primary">Types of Birds Spotted - All Time</h6>
+      </div>
+      <div class="card-body">
+        <canvas id="trendsGraph" height="120"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Weekly Sightings Chart -->
+  <div class="col-lg-6 mt-3">
+    <div class="card shadow mb-4">
+      <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+        <h6 class="m-0 font-weight-bold text-primary">Sightings - This Week</h6>
+      </div>
+      <div class="card-body">
+        <canvas id="barChart" height="300"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Today's Sightings Tables -->
+  <div class="col-lg-12 mt-3">
+    <div class="card shadow mb-4">
+      <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+        <h6 class="m-0 font-weight-bold text-primary">Sightings - Today</h6>
+      </div>
+      <div class="card-body">
+        <div id="tabs">
+          <div class="container">
+            <div class="row">
+              <div class="col-md-12">
+                <!-- Tabs -->
+                <nav>
+                  <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                    <a class="nav-item nav-link active" id="nav-birds-tab" data-toggle="tab" href="#nav-birds"
+                      role="tab" aria-controls="nav-birds" aria-selected="true"><i class="fa fa-crow"></i> Bird
+                      Sightings</a>
+                    <a class="nav-item nav-link" id="nav-cats-tab" data-toggle="tab" href="#nav-cats" role="tab"
+                      aria-controls="nav-cats" aria-selected="false"><i class="fa fa-cat"></i> Cat Sightings</a>
+                  </div>
+                </nav>
+                <div class="tab-content" id="nav-tabContent">
+                  <div class="tab-pane show active" id="nav-birds" role="tabpanel" aria-labelledby="nav-birds-tab">
+                    <!-- Bird Sightings Table -->
+                    <table class="table table-bordered dataTable" id="birdTable">
+                      <thead>
+                        <tr class="text-primary">
+                          <th data-field="id" data-formatter="IndexFormatter"></th>
+                          <th data-field="timestamp">Timestamp</th>
+                          <th data-field="species">Bird Species</th>
+                          <th data-field="image" data-formatter="birdLinkFormatter">Image</th>
+                        </tr>
+                      </thead>
+                    </table>
+                  </div>
+                  <div class="tab-pane" id="nav-cats" role="tabpanel" aria-labelledby="nav-cats-tab">
+                    <!-- Cat Sightings Table -->
+                    <table class="table table-bordered dataTable" id="catTable">
+                      <thead>
+                        <tr class="text-primary">
+                          <th data-field="id" data-formatter="IndexFormatter"></th>
+                          <th data-field="timestamp">Timestamp</th>
+                          <th data-field="image" data-formatter="catLinkFormatter">Image</th>
+                        </tr>
+                      </thead>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Toast Message -->
+<div class="toast-container position-fixed top-0 end-0 p-3">
+  <div id="toastMsg" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="toast-header text-primary">
+      <i class="fa fa-eye" style="margin-right:2px"></i><i class="fa fa-dove" style="margin-right:2px"></i>
+      <strong class="me-auto">Twitchr Admin</strong>
+      <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+    <div class="toast-body" id="toast-msg" style="font-weight:600"></div>
+  </div>
+</div>
+
+<script>
+  
+const user = {{{ toJson user }}}
+const firebaseAPIKey = {{{ toJson firebaseAPIKey }}}
+const firebaseDatabase = {{{ toJson firebaseDatabase }}}
+const firebaseId = {{{ toJson firebaseId }}}
+const firebaseAppId = {{{ toJson firebaseAppId }}}
+  
+// bootstrap tables
+let $birdTable = $('#birdTable')
+let $catTable = $('#catTable')
+
+// toast element ref
+const toastMsgEl = document.getElementById('toastMsg');
+
+// get admin command btns
+let commandBtns = Array.from(document.getElementsByClassName('cmd-btn'))
+
+// set the api key header for axios
+axios.defaults.headers.common['x-api-key'] = user.apiKey;
+
+// sightings
+const today = new Date().setHours(0, 0, 0, 0);
+let birdSightingsToday = []
+let catSightingsToday = []
+let birdSightingsThisWeek = []
+let catSightingsThisWeek = []
+
+const firebaseConfig = {
+    apiKey: firebaseAPIKey,
+    authDomain: firebaseId + ".firebaseapp.com",
+    databaseURL: firebaseDatabase ,
+    projectId: firebaseId,
+    storageBucket: firebaseId + ".appspot.com",
+    messagingSenderId: "583977570418",
+    appId: firebaseAppId,
+    measurementId: "G-5BKBXMRN3D",
+};
+
+
+const constructWeeklySightings = function (sightings) {
+    // returns a list of sightings where the timestamp is within this week
+    let weeklySightings = [];
+    let curDate = new Date();
+    let oneJan = new Date(curDate.getFullYear(), 0, 1);
+    let currentNumberOfDays = Math.floor((curDate - oneJan) / (24 * 60 * 60 * 1000));
+    sightings.forEach((sighting) => {
+        let timestampDate = new Date(sighting.timestamp);
+        let timestampNumberOfDays = Math.floor((timestampDate - oneJan) / (24 * 60 * 60 * 1000));
+        // compare this week's number and the sighting timestamp's week number
+        let curWeekNumber = Math.ceil((curDate.getDay() + 1 + currentNumberOfDays) / 7);
+        let timestampWeekNumber = Math.ceil((timestampDate.getDay() + 1 + timestampNumberOfDays) / 7);
+        if (timestampWeekNumber === curWeekNumber) {
+            weeklySightings.push(sighting)
+        }
+    })
+    return weeklySightings;
+}
+
+const constructTodaysSightings = function (sightings) {
+    // returns a list of sightings where the timestamp is today
+    let todaysSightings = [];
+    sightings.forEach((sighting) => {
+        let timestampDay = new Date(sighting.timestamp).setHours(0, 0, 0, 0);
+        if (timestampDay === today) {
+            todaysSightings.push(sighting)
+        }
+    })
+    return todaysSightings;
+}
+
+// initialize firebase
+firebase.initializeApp(firebaseConfig);
+const storage = firebase.storage();
+const database = firebase.database();
+// get database refs
+const realTimeRef = database.ref("real_time");
+const birdsRef = database.ref("bird_sightings");
+const catsRef = database.ref("cat_sightings");
+
+// get realtime data
+realTimeRef.limitToLast(1).on("value", function (snapshot) {
+    snapshot.forEach(function (childSnapshot) {
+        const image = childSnapshot.val()["image"];
+        const currentStatus = childSnapshot.val()["status"];
+        const timestamp = childSnapshot.val()["timestamp"];
+        const deviceData = childSnapshot.val()["device"];
+        // update the status panel readings
+        document.getElementById("deviceTemp").innerText = deviceData.celcius + "C";
+        document.getElementById("deviceHumdity").innerText = deviceData.humidity;
+        document.getElementById("devicePressure").innerText = deviceData.pressure;
+
+        if (image) {
+            // get the latest image
+            const storageRef = storage.ref(image);
+            storageRef
+                .getDownloadURL()
+                .then(function (url) {
+                    // populate realtime data DOM elements
+                    document.getElementById("photo").src = url;
+                    document.getElementById("timestamp").innerText = "Taken on: " + timestamp;
+                    document.getElementById("stateTimestamp").innerText = timestamp;
+                    document.getElementById("statusText").innerText = currentStatus;
+                    let icon = ""
+                    if (currentStatus.toLowerCase().includes("bird")) icon = "crow"
+                    else if (currentStatus.toLowerCase().includes("cat")) icon = "cat"
+                    else if (currentStatus.toLowerCase().includes("nothing")) icon = "eye-slash"
+                    document.getElementById("statusIcon").setAttribute("class", `fas fa-${icon} fa-2x text-warning`)
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        }
+    });
+});
+
+
+
+// get all historical data of birds
+birdsRef.once("value", function (snapshot) {
+    const birdSightings = []
+    snapshot.forEach(function (childSnapshot) {
+        let sighting = childSnapshot.val();
+        birdSightings.push(sighting)
+        // get this week's sightings
+        birdSightingsThisWeek = constructWeeklySightings(birdSightings)
+        // get today's sightings
+        birdSightingsToday = constructTodaysSightings(birdSightings)
+    });
+
+    // get images for today's bird sightings
+    birdSightingsToday.forEach((x, index) => {
+        let storageRef = storage.ref(x['image'])
+        storageRef.getDownloadURL().then((url) => {
+            let id = "bird-sighting-" + index
+            document.getElementById(id).href = url
+        })
+    })
+
+    // populate bird bootstrap table
+    let birdData = birdSightingsToday.map((todaysSighting, index) => {
+        return { id: index, timestamp: todaysSighting.timestamp, species: todaysSighting.species, image: todaysSighting.image }
+    })
+    $birdTable.bootstrapTable({
+        data: birdData, formatNoMatches: function () {
+            return 'No bird sightings today';
+        }
+    })
+
+    // get breakdown of total bird species spotted
+    birdBreakdown = {}
+    birdSpecies = [...new Set(birdSightings.map(sighting => sighting.species))]
+
+    birdSpecies.forEach((bird) => {
+        birdBreakdown[bird] = birdSightings.filter(sighting => sighting.species === bird).length
+    })
+
+    // create doughnut chart and populate it with data
+    if (birdSightings.length) {
+        const ctx = document.getElementById("trendsGraph").getContext("2d");
+        const otherOptions = {
+            type: "doughnut",
+            data: {
+                labels: Object.keys(birdBreakdown),
+                datasets: [{
+                    data: Object.values(birdBreakdown),
+                    backgroundColor:
+                        ['#8dd3c7', '#ffffb3', '#bebada', '#fb8072', '#80b1d3', '#fdb462',
+                            '#b3de69', '#fccde5', '#d9d9d9', '#bc80bd', '#ccebc5', '#ffed6f'],
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                scales: {
+                    x: {
+                        type: "timeseries",
+                        time: {
+                            unit: "week"
+                        },
+                        ticks: {
+                            autoSkip: false,
+                            source: "data"
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        };
+        const donutGraph = new Chart(ctx, otherOptions);
+    }
+
+    // get this week's cat sightings
+    let catSightings = []
+    catsRef.once("value", function (snapshot) {
+        snapshot.forEach(function (childSnapshot) {
+            catSightings.push(childSnapshot.val());
+        })
+        catSightingsThisWeek = constructWeeklySightings(catSightings);
+        catSightingsToday = constructTodaysSightings(catSightings);
+
+        // get images for today's cat sightings
+        catSightingsToday.forEach((x, index) => {
+            let storageRef = storage.ref(x['image'])
+            storageRef.getDownloadURL().then((url) => {
+                let id = "cat-sighting-" + index
+                document.getElementById(id).href = url
+            })
+        })
+        // populate cat bootstrap table
+        let catData = catSightingsToday.map((todaysSighting, index) => { 
+            return { id: index, timestamp: todaysSighting.timestamp, image: todaysSighting.image } 
+        })
+        $catTable.bootstrapTable({
+            data: catData, formatNoMatches: function () {
+                return 'No cat sightings today';
+            }
+        })
+
+        // group week's sightings per day
+        weeklyBreakdown = { 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0 }
+        birdWeekly = { ...weeklyBreakdown }
+        catWeekly = { ...weeklyBreakdown }
+        birdSightingsThisWeek.forEach((weekSighting) => {
+            birdWeekly[new Date(weekSighting.timestamp).getDay()] += 1
+        })
+        catSightingsThisWeek.forEach((catSighting) => {
+            catWeekly[new Date(catSighting.timestamp).getDay()] += 1
+        })
+
+        // create bar chart and populate the data with bird and cat sightings
+        const barChartData = {
+            labels: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+            datasets: [{
+                label: 'Bird Sightings',
+                data: Object.values(birdWeekly),
+                backgroundColor: '#80b1d3'
+            },
+            {
+                label: 'Cat Sightings',
+                data: Object.values(catWeekly),
+                backgroundColor: '#fb8072'
+            }]
+        };
+        const barChartConfig = {
+            type: 'bar',
+            data: barChartData,
+        };
+        const barChartEl = document.getElementById("barChart").getContext("2d");
+        const barChart = new Chart(barChartEl, barChartConfig);
+
+    })
+
+});
+
+// bootstrap table formatting functions
+function birdLinkFormatter(value, row, index) {
+    return LinkFormatter(row, index, 'bird')
+}
+
+function catLinkFormatter(value, row, index) {
+    return LinkFormatter(row, index, 'cat')
+}
+
+function LinkFormatter(row, index, idVal) {
+    return "<a target='_blank' id='" + idVal + "-sighting-" + index + "' href='" + row.image + "'>" + row.image + "</a>";
+}
+
+function IndexFormatter(value, row, index) {
+    return index += 1;
+}
+
+
+function makeSound(soundType) {
+    // disable the btns so user does not click again until request completed
+    commandBtns.forEach(btn => btn.disabled = true)
+    // make request to api to play a sound
+    axios
+        .post(location.href + 'api/send-update/', {
+            type: "play_sound",
+            sound: soundType
+        }, {
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        })
+        .then(() => {
+            // display success toast message
+            document.getElementById('toast-msg').innerHTML = 'Playing Sound...'
+            const toast = new bootstrap.Toast(toastMsgEl)
+            toast.show()
+            // enable command btns
+            commandBtns.forEach(btn => btn.disabled = false)
+        })
+        .catch(() => {
+            // display error toast message
+            document.getElementById('toast-msg').innerHTML = "There was an error with the request"
+            const toast = new bootstrap.Toast(toastMsgEl)
+            toast.show()
+            commandBtns.forEach(btn => btn.disabled = false)
+        });
+}
+
+function getWeather() {
+    // make request to api to get weather update
+    axios
+        .get(location.href + 'api/update-weather/')
+        .then(() => {
+            // display success toast message
+            document.getElementById('toast-msg').innerHTML = 'Getting Weather - Check your device.'
+            const toast = new bootstrap.Toast(toastMsgEl)
+            toast.show()
+            commandBtns.forEach(btn => btn.disabled = false)
+        })
+        .catch(() => {
+            // display error toast message
+            document.getElementById('toast-msg').innerHTML = "There was an error getting the weather update"
+            const toast = new bootstrap.Toast(toastMsgEl)
+            toast.show()
+            commandBtns.forEach(btn => btn.disabled = false)
+        });
+}
+
+</script>

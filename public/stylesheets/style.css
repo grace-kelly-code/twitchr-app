@@ -1,0 +1,55 @@
+body {
+  background: #f0f2fa;
+}
+
+a {
+  color: #2f3542 !important;
+}
+
+img {
+  object-fit: contain;
+  height: 100%;
+}
+
+.latest-image {
+  height: 450px;
+  background: #20242c;
+}
+
+.text-danger {
+  color: #ff4757 !important;
+}
+
+.text-info {
+  color: #1e90ff !important;
+}
+
+.nav-link {
+  font-size: 16px;
+}
+
+.text-success {
+  color: #0ac758 !important;
+}
+
+nav li a:hover {
+  text-decoration: underline;
+}
+
+.navbar-brand,
+.text-muted,
+.text-primary {
+  color: #3742fa !important;
+}
+
+.btn-primary {
+  background: #3742fa !important;
+}
+
+.text-warning {
+  color: #ffa502 !important;
+}
+
+.font-weight-bold {
+  font-weight: 700 !important;
+}
